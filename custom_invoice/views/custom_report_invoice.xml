@@ -2,6 +2,9 @@
 
     <template id="primetech_invoice_report"
               inherit_id="account.report_invoice_document">
+
+    <xpath expr="//div[@name='address_same_as_shipping']/ancestor::div[hasclass('row')]" position="replace">
+    </xpath>
 	<xpath expr="//div[@name='address_same_as_shipping']/ancestor::div[hasclass('row')]" position="replace">
 	</xpath>              
        <!-- Bloc Date et partenaire -->
