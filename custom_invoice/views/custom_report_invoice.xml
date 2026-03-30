@@ -1,12 +1,6 @@
-<odoo>
-
-    <template id="primetech_invoice_report"
-              inherit_id="account.report_invoice_document">
-
+<data>
     <xpath expr="//div[@name='address_same_as_shipping']/ancestor::div[hasclass('row')]" position="replace">
     </xpath>
-	<xpath expr="//div[@name='address_same_as_shipping']/ancestor::div[hasclass('row')]" position="replace">
-	</xpath>              
        <!-- Bloc Date et partenaire -->
     <xpath expr="//span[@t-field='o.name']/.." position="replace">
         <!-- Date du jour -->
@@ -36,7 +30,9 @@
         
             <!-- donner la couleur du theme -->
             <div class="mb-2 text-primary" style="margin-top: 30px;">
+               
                 <h4 style="margin-bottom: 0;">
+                     <b>
                     <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">FACTURE</span>
                     <span t-if="o.move_type == 'out_invoice' and o.state == 'draft'">FACTURE PROFORMA</span>
                     <span t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">FACTURE ANNULE</span>
@@ -44,17 +40,19 @@
                     <span t-if="o.move_type == 'in_refund'">AVOIR ACHAT</span>
                     <span t-if="o.move_type == 'in_invoice'">FACTURE PROFORMA</span>
                     <span t-if="o.name != '/'" t-field="o.name"/>
+                    </b>
                 </h4>
+                
             </div>
 
 
 
-      <!-- information sur le partenaire -->
-            <div class="row info_partner">
+            <!-- information sur le partenaire -->
+            <div class="row info_partner" t-if="o.partner_id">
                 <div class="col-5 offset-7">
                     <div class="p-2">
             
-                        <!-- Titre dynamique -->
+                        <!-- Titre -->
                         <p class="mb-1 small text-muted">
                             <t t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
                                 FACTURÉ À
@@ -65,51 +63,67 @@
                         </p>
             
                         <!-- Nom client -->
-                        <p class="h5 mb-1 fw-bold">
+                        <p class="h5 mb-1 fw-bold" t-if="o.partner_id.name">
                             <span t-field="o.partner_id"/>
                         </p>
             
-                        <!-- Adresse -->
-                        <p class="mb-1">
-                            <t t-if="o.partner_id.street">
-                                <span t-field="o.partner_id.street"/>
-                            </t>
-                            <t t-if="o.partner_id.street2">
-                                , <span t-field="o.partner_id.street2"/>
-                            </t>
-                            <br/>
-                            <t t-if="o.partner_id.city">
-                                <span t-field="o.partner_id.city"/>
-                            </t>
-                            <t t-if="o.partner_id.state_id">
-                                , <span t-field="o.partner_id.state_id"/>
-                            </t>
-                            <t t-if="o.partner_id.country_id">
-                                , <span t-field="o.partner_id.country_id"/>
-                            </t>
-                            <t t-if="o.partner_id.zip">
-                                — BP <span t-field="o.partner_id.zip"/>
-                            </t>
-                        </p>
-            
-                        <!-- Infos légales et contact -->
-                        <p class="mb-0 small">
-                            <t t-if="o.partner_id.vat">
-                                <strong>NIU :</strong> <span t-field="o.partner_id.vat"/>
-                            </t>
-            
-                            <t t-if="o.partner_id.phone or o.partner_id.mobile">
-                                <br/>
-                                <strong>Tél :</strong>
-                                <t t-if="o.partner_id.phone">
-                                    <span t-field="o.partner_id.phone"/>
+                        <!-- Adresse complète conditionnelle -->
+                        <t t-if="o.partner_id.street or o.partner_id.street2 or o.partner_id.city or o.partner_id.state_id or o.partner_id.country_id or o.partner_id.zip">
+                            <p class="mb-1">
+                                <t t-if="o.partner_id.street">
+                                    <span t-field="o.partner_id.street"/>
                                 </t>
-                                <t t-if="o.partner_id.mobile">
-                                    <t t-if="o.partner_id.phone"> / </t>
-                                    <span t-field="o.partner_id.mobile"/>
+                                <t t-if="o.partner_id.street2">
+                                    , <span t-field="o.partner_id.street2"/>
                                 </t>
-                            </t>
-                        </p>
+            
+                                <t t-if="o.partner_id.city or o.partner_id.state_id or o.partner_id.country_id or o.partner_id.zip">
+                                    <br/>
+                                </t>
+            
+                                <t t-if="o.partner_id.city">
+                                    <span t-field="o.partner_id.city"/>
+                                </t>
+                                <t t-if="o.partner_id.state_id">
+                                    , <span t-field="o.partner_id.state_id"/>
+                                </t>
+                                <t t-if="o.partner_id.country_id">
+                                    , <span t-field="o.partner_id.country_id"/>
+                                </t>
+                                <t t-if="o.partner_id.zip">
+                                    — BP <span t-field="o.partner_id.zip"/>
+                                </t>
+                            </p>
+                        </t>
+            
+                        <!-- Infos légales -->
+                        <t t-if="o.partner_id.vat or o.partner_id.phone or o.partner_id.mobile">
+                            <p class="mb-0 small">
+            
+                                <t t-if="o.partner_id.vat">
+                                    <strong>NIU :</strong>
+                                    <span t-field="o.partner_id.vat"/>
+                                </t>
+            
+                                <t t-if="o.partner_id.phone or o.partner_id.mobile">
+                                    <t t-if="o.partner_id.vat">
+                                        <br/>
+                                    </t>
+            
+                                    <strong>Tél :</strong>
+            
+                                    <t t-if="o.partner_id.phone">
+                                        <span t-field="o.partner_id.phone"/>
+                                    </t>
+            
+                                    <t t-if="o.partner_id.mobile">
+                                        <t t-if="o.partner_id.phone"> / </t>
+                                        <span t-field="o.partner_id.mobile"/>
+                                    </t>
+                                </t>
+            
+                            </p>
+                        </t>
             
                     </div>
                 </div>
@@ -201,7 +215,7 @@
                 </t>
 
                 <t t-if="o.create_uid">
-                    <strong>Document créé par :</strong> <span t-field="o.create_uid"/>
+                    <strong>vendu par :</strong> <span t-field="o.create_uid"/>
                 </t>
 
 
@@ -214,16 +228,20 @@
     <!-- tableau des articles -->
 <xpath expr="//table[@name='invoice_line_table']" position="replace">
     <table class="table table-sm mb-0" name="invoice_line_table" style="width: 100%; border-collapse: collapse; margin: 0 auto;">
-        <thead style="background-color: #0d6efd; color: white; font-weight: bold;">
-            <tr>
-                <th style="text-align: left; border: 1px solid #dee2e6; padding: 4px;">Désignation</th>
-                <th style="text-align: right; border: 1px solid #dee2e6; padding: 4px;">Quantité</th>
-                <th style="text-align: right; border: 1px solid #dee2e6; padding: 4px;">Prix Unitaire</th>
-                <th style="text-align: right; border: 1px solid #dee2e6; padding: 4px;" t-if="display_discount">Remise %</th>
-                <th style="text-align: right; border: 1px solid #dee2e6; padding: 4px;">Taxes</th>
-                <th style="text-align: right; border: 1px solid #dee2e6; padding: 4px;">Montant</th>
+        <thead class="bg-primary">
+            <tr class="border-bottom">
+                <th class="text-start border p-1" style="color: white;">Désignation</th>
+                <th class="text-end border p-1" style="color: white;">Quantité</th>
+                <th class="text-end border p-1" style="color: white;">Prix Unitaire</th>
+                <th class="text-end border p-1" style="color: white;" t-if="display_discount">Remise %</th>
+                <th class="text-end border p-1" style="color: white;">Taxes</th>
+                <th class="text-end border p-1" style="color: white;">Montant</th>
             </tr>
         </thead>
+
+
+
+
         <tbody>
             <t t-foreach="o.invoice_line_ids" t-as="line">
                 <tr t-att-class="'fw-bold o_line_section bg-light' if line.display_type == 'line_section' else 'fst-italic text-muted' if line.display_type == 'line_note' else ''">
@@ -350,9 +368,7 @@
 
  <!-- les totaux et les autres informations -->
 <xpath expr="//div[@id='right-elements']" position="replace">
-    <div id="right-elements"
-         t-attf-class="#{'col-5 mt-0' if report_type == 'pdf' else 'col-12 col-md-5'} ms-5 d-inline-block float-end"
-         style="display:flex; flex-direction:column; justify-content:flex-start;">
+    <div id="right-elements" t-attf-class="#{'col-5 mt-0' if report_type == 'pdf' else 'col-12 col-md-5'} ms-5 d-inline-block float-end" style="display:flex; flex-direction:column; justify-content:flex-start;">
 
         <!-- Totaux -->
         <div id="total" class="mb-3">
@@ -362,8 +378,7 @@
                 <tr>
                     <td style="padding:4px 5px; font-weight:600;" class="text-primary">Total HT</td>
                     <td class="text-end" style="padding:4px 5px;">
-                        <span t-field="o.amount_untaxed"
-                              t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                        <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;:&quot;monetary&quot;,&quot;display_currency&quot;:o.currency_id}"/>
                     </td>
                 </tr>
 
@@ -379,8 +394,7 @@
                                 </td>
                                 <td class="text-end" style="padding:2px 5px;">
                                     <!-- Somme des montants de taxe sur toutes les lignes -->
-                                    <span t-esc="sum(line.price_total - line.price_subtotal for line in o.invoice_line_ids if tax in line.tax_ids)"
-                                          t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                                    <span t-esc="sum(line.price_total - line.price_subtotal for line in o.invoice_line_ids if tax in line.tax_ids)" t-options="{&quot;widget&quot;:&quot;monetary&quot;,&quot;display_currency&quot;:o.currency_id}"/>
                                 </td>
                             </tr>
                         </t>
@@ -392,8 +406,7 @@
                     <td style="padding:4px 5px; font-weight:700; font-size:1.3rem;" class="text-primary">Total TTC</td>
                     <td class="text-end" style="padding:4px 5px; font-size:1.1rem;">
                         <strong>
-                            <span t-field="o.amount_total"
-                                  t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                            <span t-field="o.amount_total" t-options="{&quot;widget&quot;:&quot;monetary&quot;,&quot;display_currency&quot;:o.currency_id}"/>
                         </strong>
                     </td>
                 </tr>
@@ -412,17 +425,17 @@
                                 <td style="padding:2px 5px; font-weight:500;" class="text-primary">
                                     <t t-if="payment_vals['is_refund']">Reversed on </t>
                                     <t t-else="">Payé le </t>
-                                    <span t-out="payment_vals['date']" t-options='{"widget":"date"}'/>
+                                    <span t-out="payment_vals['date']" t-options="{&quot;widget&quot;:&quot;date&quot;}"/>
                                 </td>
                                 <td class="text-end" style="padding:2px 5px;">
-                                    <span t-out="payment_vals['amount']" t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                                    <span t-out="payment_vals['amount']" t-options="{&quot;widget&quot;:&quot;monetary&quot;,&quot;display_currency&quot;:o.currency_id}"/>
                                 </td>
                             </tr>
                         </t>
                         <tr style="font-weight:700;" class="text-primary">
                             <td>Total à payer</td>
                             <td class="text-end">
-                                <span t-field="o.amount_residual" t-options='{"widget":"monetary","display_currency":o.currency_id}'/>
+                                <span t-field="o.amount_residual" t-options="{&quot;widget&quot;:&quot;monetary&quot;,&quot;display_currency&quot;:o.currency_id}"/>
                             </td>
                         </tr>
                     </table>
@@ -469,6 +482,4 @@
 </xpath>
 
                 
-    </template>
-
-</odoo>
+</data>
