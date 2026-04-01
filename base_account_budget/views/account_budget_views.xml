@@ -131,7 +131,7 @@
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"
-                                           groups="base.group_no_one"/>
+                                           />
                                     <field name="planned_amount"
                                            sum="Planned Amount"
                                            widget="monetary"/>
@@ -166,7 +166,7 @@
                                                        class="oe_inline"/>
                                             </div>
                                             <field name="paid_date"
-                                                   groups="base.group_no_one"/>
+                                                  />
                                             <field name="company_id"
                                                    options="{'no_create': True}"
                                                    groups="base.group_multi_company"/>
@@ -304,7 +304,7 @@
                        groups="analytic.group_analytic_accounting"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
-                <field name="paid_date" groups="base.group_no_one"/>
+                <field name="paid_date" />
                 <field name="planned_amount" widget="monetary"/>
                 <field name="practical_amount" widget="monetary"/>
                 <field name="theoretical_amount" widget="monetary"/>
